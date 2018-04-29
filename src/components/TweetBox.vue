@@ -23,6 +23,31 @@
       <span :class="`${$options.name}__remainingCharacters`">
         {{ remainingCharacters }}
       </span>
+      <svg
+        :class="`${$options.name}__counter`"
+        viewBox="0 0 33.83098862 33.83098862"
+        height="20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          :class="`${$options.name}__counterUnderlay`"
+          cx="16.91549431"
+          cy="16.91549431"
+          r="15.91549431"
+          fill="none"
+          stroke-width="2"
+        />
+        <circle
+          :class="`${$options.name}__counterProgress`"
+          :stroke-dasharray="`${limitStatus},100`"
+          cx="16.91549431"
+          cy="16.91549431"
+          r="15.91549431"
+          fill="none"
+          stroke-width="4"
+        />
+      </svg>
     </div>
   </div>
 </template>
@@ -94,6 +119,8 @@ export default {
   $color-danger: #e0245e;
   $color-danger-light: #ffb8c2;
   $color-gray: #657786;
+  $color-gray-light: #ccd6dd;
+  $color-primary: #1da1f2;
 
   position: relative;
 
@@ -165,6 +192,35 @@ export default {
     .has-exceeded-limit & {
       color: $color-danger;
     }
+  }
+
+  // 1. Making overflowing content visible, because
+  //    otherwise the `counterPulse` animation would be
+  //    cut off.
+  &__counter {
+    overflow: visible; // 1
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  &__counterUnderlay {
+    stroke: $color-gray-light;
+  }
+
+  &__counterProgress {
+    stroke: $color-primary;
+
+    .has-exceeded-limit & {
+      stroke: $color-danger;
+      animation: counterPulse 0.3s ease-in-out;
+      animation-iteration-count: 1;
+    }
+  }
+
+  @keyframes counterPulse {
+    0% { stroke-width: 4; }
+    50% { stroke-width: 6; }
+    100% { stroke-width: 4; }
   }
 }
 </style>
