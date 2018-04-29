@@ -1,5 +1,12 @@
 <template>
-  <div :class="$options.name">
+  <div
+    :class="[
+      $options.name,
+      {
+        'has-exceeded-limit': limitStatus > 100,
+      },
+    ]"
+  >
     <div
       :class="`${$options.name}__htmlarea`"
       aria-hidden
@@ -12,6 +19,11 @@
       rows="1"
       @input="updateValue"
     />
+    <div :class="`${$options.name}__limit`">
+      <span :class="`${$options.name}__remainingCharacters`">
+        {{ remainingCharacters }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -33,6 +45,9 @@ export default {
     },
     limitStatus() {
       return (this.value.length / this.limit) * 100;
+    },
+    remainingCharacters() {
+      return this.limit - this.value.length;
     },
     textareaStyle() {
       return getComputedStyle(this.$refs.textarea);
@@ -76,7 +91,9 @@ export default {
 <style lang="scss">
 .TweetBox {
   $color-border: #99dde6;
+  $color-danger: #e0245e;
   $color-danger-light: #ffb8c2;
+  $color-gray: #657786;
 
   position: relative;
 
@@ -130,6 +147,24 @@ export default {
 
   em {
     background: $color-danger-light;
+  }
+
+  &__limit {
+    display: flex;
+    position: absolute;
+    right: 0.75em;
+    bottom: 0.75em;
+    align-items: center;
+  }
+
+  &__remainingCharacters {
+    margin-right: 0.5em;
+    color: $color-gray;
+    font-size: 0.75em;
+
+    .has-exceeded-limit & {
+      color: $color-danger;
+    }
   }
 }
 </style>
