@@ -10,8 +10,7 @@
     <div
       :class="`${$options.name}__htmlarea`"
       aria-hidden
-      v-html="htmlValue"
-    />
+    >{{ valueAllowed }}<em v-if="valueExcess">{{ valueExcess }}</em></div>
     <textarea
       ref="textarea"
       :class="`${$options.name}__textarea`"
@@ -65,8 +64,11 @@ export default {
     },
   },
   computed: {
-    htmlValue() {
-      return `${this.value.slice(0, this.limit)}<em>${this.value.slice(this.limit)}</em>`;
+    valueAllowed() {
+      return this.limit ? this.value.slice(0, this.limit) : this.value;
+    },
+    valueExcess() {
+      return this.limit ? this.value.slice(this.limit) : '';
     },
     limitStatus() {
       return (this.value.length / this.limit) * 100;
