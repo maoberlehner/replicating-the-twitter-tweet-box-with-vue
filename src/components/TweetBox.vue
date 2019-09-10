@@ -7,6 +7,8 @@
       },
     ]"
   >
+    <button @click="$refs.textarea.value+='\nhello\n\n\n\n\nworld'">Click me</button>
+
     <div
       :class="`${$options.name}__htmlarea`"
       aria-hidden
